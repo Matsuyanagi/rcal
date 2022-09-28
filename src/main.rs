@@ -1,5 +1,8 @@
-use rcal;
+#[allow(unused_imports)]
+use clap::{ArgEnum, Parser, Subcommand};
 
 fn main() {
-    rcal::exec();
+    let cli = rcal::Cli::parse();
+
+    rcal::exec(&cli);
 }
