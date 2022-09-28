@@ -1,7 +1,7 @@
 use clap::Parser;
 
 fn main() {
-    let cli = rcal::Cli::parse();
+    let mut cli = rcal::Cli::parse();
 
-    rcal::exec(&cli);
+    rcal::exec(&mut cli);
 }

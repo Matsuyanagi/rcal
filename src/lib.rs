@@ -1,32 +1,36 @@
+use chrono::prelude::*;
 #[allow(unused_imports)]
 use clap::{ArgEnum, Parser, Subcommand};
 
-#[derive(Parser)]
+#[derive(Parser, Debug)]
 pub struct Cli {
-    // #[clap(parse(from_os_str))]
-    #[clap(short, long, value_name = "YEAR", value_parser)]
-    pub year: Option<u32>,
-    #[clap(short, long, value_name = "MONTH", value_parser)]
-    pub month: Option<u32>,
+    #[clap(value_parser, default_value_t = Local::now().month())]
+    pub month: u32,
+    #[clap(value_parser, default_value_t = Local::now().year() as u32)]
+    pub year: u32,
 
-    #[clap(short = 'n', long = "num", value_name = "MONTH_NUM", value_parser)]
-    pub month_num: Option<u32>,
+    #[clap(
+        short = 'n',
+        long = "num",
+        value_name = "MONTH_NUM",
+        value_parser,
+        default_value_t = 3
+    )]
+    pub month_num: u32,
 
-    #[clap(short, long, value_name = "HEAURISTIC")]
+    #[clap(short, long, value_name = "HEAURISTIC", action = clap::ArgAction::SetTrue, next_line_help = true, long_help = "In January or December, the calendar for the previous year or the following year will be displayed.")]
     pub heuristic: bool,
 }
 
-pub fn exec(cli: &Cli) {
+pub fn exec(cli: &mut Cli) {
     println!("Hello , rcal.");
-    if let Some(year) = cli.year {
-        println!("year : {:?}", year);
-    }
-    if let Some(month) = cli.month {
-        println!("month : {:?}", month);
-    }
-    if let Some(month_num) = cli.month_num {
-        println!("month_num : {:?}", month_num);
-    }
+
+    let date_time = Local::now();
+
+
+    println!("month : {:?}", cli.month);
+    println!("year : {:?}", cli.year);
+    println!("month_num : {:?}", cli.month_num);
     println!("heuristic : {:?}", cli.heuristic);
 }
 
