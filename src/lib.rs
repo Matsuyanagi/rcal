@@ -1,5 +1,5 @@
 #[allow(unused_imports)]
-use clap::{Parser, Subcommand, ArgEnum};
+use clap::{ArgEnum, Parser, Subcommand};
 
 #[derive(Parser)]
 pub struct Cli {
@@ -9,18 +9,23 @@ pub struct Cli {
     #[clap(short, long, value_name = "MONTH", value_parser)]
     pub month: Option<u32>,
 
+    #[clap(short = 'n', long = "num", value_name = "MONTH_NUM", value_parser)]
+    pub month_num: Option<u32>,
+
     #[clap(short, long, value_name = "HEAURISTIC")]
     pub heuristic: bool,
 }
 
-
-pub fn exec( cli: &Cli ) {
+pub fn exec(cli: &Cli) {
     println!("Hello , rcal.");
     if let Some(year) = cli.year {
         println!("year : {:?}", year);
     }
     if let Some(month) = cli.month {
         println!("month : {:?}", month);
+    }
+    if let Some(month_num) = cli.month_num {
+        println!("month_num : {:?}", month_num);
     }
     println!("heuristic : {:?}", cli.heuristic);
 }

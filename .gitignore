@@ -37,3 +37,5 @@ Cargo.lock
 
 # Built Visual Studio Code Extensions
 *.vsix
+
+*.code-workspace
