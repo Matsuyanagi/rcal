@@ -87,10 +87,10 @@ impl MonthCalendar {
     // デバグ用仮の表示用文字列出力
     pub fn temporal_to_string(&self) -> String {
         format!(
-            "{}\n{}\n{}<",
+            "{}\n{}\n{}",
             self.header_year_month,
             self.header_day_of_week,
-            self.calendar_weeks.join("<\n")
+            self.calendar_weeks.join("\n")
         )
     }
 }
