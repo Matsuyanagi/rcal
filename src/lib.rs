@@ -11,7 +11,7 @@ pub mod month_calendar;
 pub mod main_lib {
     use crate::month_calendar;
 
-    pub fn exec(config: &mut crate::config::Config) {
+    pub fn exec(config: &crate::config::Config) {
         let today = chrono::Local::now().date_naive();
         let calendar = month_calendar::MonthCalendar::new( config.year, config.month, today );
         

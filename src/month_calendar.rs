@@ -12,7 +12,9 @@ pub struct MonthCalendar {
     pub last_day: i32,
     pub is_today_month: bool,
 
+    #[allow(dead_code)]
     today_year: u32,
+    #[allow(dead_code)]
     today_month: u32,
     today_day: i32,
 
@@ -26,11 +28,16 @@ impl MonthCalendar {
         let first_day = chrono::NaiveDate::from_ymd(year as i32, month, 1);
         let last_day = first_day.end_of_month().unwrap().day() as i32;
 
+        let mut first_day_of_week = first_day.weekday().number_from_monday() as i32;
+        if first_day_of_week >= 7{
+            first_day_of_week -= 7; // Sun = 0, Mon = 1, ... Sat = 6
+        }
+
         let mut month_calendar = MonthCalendar {
             year,
             month,
             first_day,
-            first_day_of_week: first_day.weekday().number_from_monday() as i32 % 7,     // Sun = 0, Mon = 1, ... Sat = 6
+            first_day_of_week,
             last_day,
             is_today_month: first_day.year() == today.year() && first_day.month() == today.month(),
             today_year: today.year() as u32,
@@ -43,45 +50,47 @@ impl MonthCalendar {
         month_calendar.calendar_weeks = month_calendar.create_day_table();
         month_calendar
     }
-    
+
     // year, month, first_day_of_week などから日付のならんだ calendar_weeks 表を作る。
     //  色を入れられるようにしておく
-    fn create_day_table(&mut self) -> Vec<String>{
+    fn create_day_table(&self) -> Vec<String> {
         let mut calendar_weeks = Vec::with_capacity(8);
         let day_space = "   ";
-        
+
         let minus_start_day = 1 - self.first_day_of_week;
         let mut week_str: String = "".to_string();
-        
+
         let mut day_count = 0;
-        for d in minus_start_day ..= self.last_day {
-            if d <= 0{
+        for d in minus_start_day..=self.last_day {
+            if d <= 0 {
                 week_str += day_space;
-            }else{
-                if self.is_today_month && d == self.today_day{
-                    week_str += format!(">{:2}",d).as_str();
-                }else{
-                    week_str += format!(" {:2}",d).as_str();
+            } else {
+                if self.is_today_month && d == self.today_day {
+                    week_str += format!(">{:2}", d).as_str();
+                } else {
+                    week_str += format!(" {:2}", d).as_str();
                 }
             }
             day_count += 1;
-            if day_count == 7{
+            if day_count == 7 {
                 calendar_weeks.push(week_str);
                 week_str = "".to_string();
                 day_count = 0;
             }
         }
-        if ! week_str.is_empty(){
-            week_str += day_space.to_string().repeat( 7 - day_count ).as_str();
+        if !week_str.is_empty() {
+            week_str += day_space.to_string().repeat(7 - day_count).as_str();
             calendar_weeks.push(week_str);
         }
         calendar_weeks
     }
-    
-    
+
     pub fn temporal_to_string(&self) -> String {
-        format!( "{}\n{}\n{}<", self.header_year_month, self.header_day_of_week, self.calendar_weeks.join("<\n") )
+        format!(
+            "{}\n{}\n{}<",
+            self.header_year_month,
+            self.header_day_of_week,
+            self.calendar_weeks.join("<\n")
+        )
     }
-    
-    
 }
