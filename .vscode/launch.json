@@ -1,0 +1,83 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug unit tests in library 'rcal'",
+			"cargo": {
+				"args": [
+					"test",
+					"--no-run",
+					"--lib",
+					"--package=rcal"
+				],
+				"filter": {
+					"name": "rcal",
+					"kind": "lib"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug executable 'rcal'",
+			"cargo": {
+				"args": [
+					"build",
+					"--bin=rcal",
+					"--package=rcal"
+				],
+				"filter": {
+					"name": "rcal",
+					"kind": "bin"
+				}
+			},
+			"args": ["2020","8"],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug unit tests in executable 'rcal'",
+			"cargo": {
+				"args": [
+					"test",
+					"--no-run",
+					"--bin=rcal",
+					"--package=rcal"
+				],
+				"filter": {
+					"name": "rcal",
+					"kind": "bin"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		},
+		{
+			"type": "lldb",
+			"request": "launch",
+			"name": "Debug integration test 'integration_test'",
+			"cargo": {
+				"args": [
+					"test",
+					"--no-run",
+					"--test=integration_test",
+					"--package=rcal"
+				],
+				"filter": {
+					"name": "integration_test",
+					"kind": "test"
+				}
+			},
+			"args": [],
+			"cwd": "${workspaceFolder}"
+		}
+	]
+}

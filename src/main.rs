@@ -1,7 +1,9 @@
 use clap::Parser;
+use rcal::main_lib;
 
 fn main() {
-    let mut cli = rcal::Cli::parse();
+    let cli = rcal::cli::Cli::parse();
+    let mut config = rcal::config::Config::build(&cli);
 
-    rcal::exec(&mut cli);
+    main_lib::exec(&mut config);
 }
