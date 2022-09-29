@@ -1,7 +1,7 @@
 #[allow(unused_imports)]
-use chrono::prelude::*;
-#[allow(unused_imports)]
 use chrono::offset::Local;
+#[allow(unused_imports)]
+use chrono::prelude::*;
 #[allow(unused_imports)]
 use clap::{ArgEnum, Parser, Subcommand};
 pub mod cli;
@@ -13,14 +13,10 @@ pub mod main_lib {
 
     pub fn exec(config: &crate::config::Config) {
         let today = chrono::Local::now().date_naive();
-        let calendar = month_calendar::MonthCalendar::new( config.year, config.month, today );
-        
-        println!("{}", calendar.temporal_to_string() );
-    }
-}
+        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today);
 
-pub fn add_one(left: usize) -> usize {
-    left + 1
+        println!("{}", calendar.temporal_to_string());
+    }
 }
 
 #[cfg(test)]
@@ -29,7 +25,46 @@ mod tests {
 
     #[test]
     fn test01() {
-        let result = add_one(2);
-        assert_eq!(result, 3);
+        let config = crate::config::Config {
+            year: 2022,
+            month: 1,
+            month_num: 1,
+            heuristic: false,
+        };
+        let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
+        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
+        
+        let expect_answer = 
+r#" 2022 - 01
+ Su Mo Tu We Th Fr Sa
+                    1
+  2  3  4  5  6  7  8
+  9 10 11 12 13 14 15
+ 16 17 18 19 20 21 22
+ 23 24 25 26 27 28 29
+ 30 31               "#;
+        assert_eq!(calendar.temporal_to_string(), expect_answer);
+    }
+    #[test]
+    fn test02_leap_year() {
+        let config = crate::config::Config {
+            year: 2015,
+            month: 2,
+            month_num: 1,
+            heuristic: false,
+        };
+        let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
+        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
+        
+        let expect_answer = 
+r#" 2015 - 02
+ Su Mo Tu We Th Fr Sa
+  1  2  3  4  5  6  7
+  8  9 10 11 12 13 14
+ 15 16 17 18 19 20 21
+ 22 23 24 25 26 27 28"#;
+        assert_eq!(calendar.temporal_to_string(), expect_answer);
+
+        
     }
 }

@@ -43,7 +43,7 @@ impl MonthCalendar {
             today_month: today.month(),
             today_day: today.day() as i32,
             header_year_month: first_day.format(" %Y - %m").to_string(),
-            header_day_of_week: String::from(" Su Mo Tu We Th Fr St"),
+            header_day_of_week: String::from(" Su Mo Tu We Th Fr Sa"),
             calendar_weeks: Vec::with_capacity(8),
         };
         month_calendar.calendar_weeks = month_calendar.create_day_table();
