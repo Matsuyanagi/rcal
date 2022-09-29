@@ -7,7 +7,6 @@ pub struct MonthCalendar {
     pub year: u32,
     pub month: u32,
     pub first_day: NaiveDate,
-    // pub first_day_of_week: chrono::Weekday,
     pub first_day_of_week: i32,
     pub last_day: i32,
     pub is_today_month: bool,
@@ -43,7 +42,7 @@ impl MonthCalendar {
             today_year: today.year() as u32,
             today_month: today.month(),
             today_day: today.day() as i32,
-            header_year_month: first_day.format("%Y - %m").to_string(),
+            header_year_month: first_day.format(" %Y - %m").to_string(),
             header_day_of_week: String::from(" Su Mo Tu We Th Fr St"),
             calendar_weeks: Vec::with_capacity(8),
         };
@@ -85,6 +84,7 @@ impl MonthCalendar {
         calendar_weeks
     }
 
+    // デバグ用仮の表示用文字列出力
     pub fn temporal_to_string(&self) -> String {
         format!(
             "{}\n{}\n{}<",
