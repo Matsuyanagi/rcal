@@ -1,4 +1,5 @@
 use chrono::naive::NaiveDate;
+#[allow(unused_imports)]
 use chrono::{Datelike, Local, Months};
 use chrono_utilities::naive::DateTransitions;
 
@@ -39,7 +40,6 @@ impl MonthCalendar {
             header_day_of_week: String::from(" Su Mo Tu We Th Fr St"),
             calendar_weeks: Vec::with_capacity(8),
         };
-        // month_calendar.create_day_table();
         month_calendar.calendar_weeks = month_calendar.create_day_table();
         month_calendar
     }
@@ -47,9 +47,8 @@ impl MonthCalendar {
     // year, month, first_day_of_week などから日付のならんだ calendar_weeks 表を作る。
     //  色を入れられるようにしておく
     fn create_day_table(&mut self) -> Vec<String>{
-        // self.calendar_weeks.push( self.header_year_month.clone() );
-        // self.calendar_weeks.push( self.header_day_of_week.clone() );
         let mut calendar_weeks = Vec::with_capacity(8);
+        let day_space = "   ";
         
         let minus_start_day = 1 - self.first_day_of_week;
         let mut week_str: String = "".to_string();
@@ -57,7 +56,7 @@ impl MonthCalendar {
         let mut day_count = 0;
         for d in minus_start_day ..= self.last_day {
             if d <= 0{
-                week_str += "   ";
+                week_str += day_space;
             }else{
                 if self.is_today_month && d == self.today_day{
                     week_str += format!(">{:2}",d).as_str();
@@ -73,6 +72,7 @@ impl MonthCalendar {
             }
         }
         if ! week_str.is_empty(){
+            week_str += day_space.to_string().repeat( 7 - day_count ).as_str();
             calendar_weeks.push(week_str);
         }
         calendar_weeks
@@ -80,7 +80,7 @@ impl MonthCalendar {
     
     
     pub fn temporal_to_string(&self) -> String {
-        format!( "{}\n{}\n{}", self.header_year_month, self.header_day_of_week, self.calendar_weeks.join("\n") )
+        format!( "{}\n{}\n{}<", self.header_year_month, self.header_day_of_week, self.calendar_weeks.join("<\n") )
     }
     
     
