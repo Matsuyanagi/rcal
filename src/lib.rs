@@ -27,6 +27,7 @@ mod tests {
             year: 2022,
             month: 1,
             month_num: 1,
+            calendar_month_column: 3,
             heuristic: false,
         };
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
@@ -48,6 +49,7 @@ mod tests {
             year: 2015,
             month: 2,
             month_num: 1,
+            calendar_month_column: 3,
             heuristic: false,
         };
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);

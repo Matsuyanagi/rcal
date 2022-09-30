@@ -16,6 +16,15 @@ pub struct Cli {
     )]
     pub month_num: u32,
 
+    #[clap(
+        short = 'c',
+        long = "column",
+        value_name = "MONTH_COLUMN",
+        value_parser,
+        default_value_t = 3
+    )]
+    pub calendar_month_column: u32,
+
     #[clap(short, long, value_name = "HEAURISTIC", action = clap::ArgAction::SetTrue, next_line_help = true, long_help = "In January or December, the calendar for the previous year or the following year will be displayed.")]
     pub heuristic: bool,
 }

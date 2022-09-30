@@ -6,6 +6,7 @@ pub struct Config {
     pub month: u32,
 
     pub month_num: u32,
+    pub calendar_month_column: u32,
     pub heuristic: bool,
 }
 
@@ -20,6 +21,7 @@ impl Config {
             year: 0,
             month: 0,
             month_num: 0,
+            calendar_month_column: 0,
             heuristic: false,
         }
     }
@@ -28,6 +30,7 @@ impl Config {
         let mut config = Config::new();
         config.month_num = cli.month_num;
         config.heuristic = cli.heuristic;
+        config.calendar_month_column = cli.calendar_month_column;
 
         let m = MY {
             first: cli.first,
