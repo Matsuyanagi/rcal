@@ -20,8 +20,6 @@
                 }
             },
             "args": [
-                "2020",
-                "8"
             ],
             "cwd": "${workspaceFolder}"
         },

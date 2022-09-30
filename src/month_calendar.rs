@@ -28,7 +28,7 @@ impl MonthCalendar {
         let last_day = first_day.end_of_month().unwrap().day() as i32;
 
         let mut first_day_of_week = first_day.weekday().number_from_monday() as i32;
-        if first_day_of_week >= 7{
+        if first_day_of_week >= 7 {
             first_day_of_week -= 7; // Sun = 0, Mon = 1, ... Sat = 6
         }
 
