@@ -7,15 +7,13 @@ use clap::{ArgEnum, Parser, Subcommand};
 pub mod cli;
 pub mod config;
 pub mod month_calendar;
+pub mod calendar_whole;
 
 pub mod main_lib {
-    use crate::month_calendar;
+    use crate::{calendar_whole};
 
     pub fn exec(config: &crate::config::Config) {
-        let today = chrono::Local::now().date_naive();
-        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today);
-
-        println!("{}", calendar.temporal_to_string());
+        calendar_whole::CalendarWhole::exec( &config );
     }
 }
 
