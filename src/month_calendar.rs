@@ -42,7 +42,7 @@ impl MonthCalendar {
             today_year: today.year() as u32,
             today_month: today.month(),
             today_day: today.day() as i32,
-            header_year_month: first_day.format(" %Y - %m").to_string(),
+            header_year_month: first_day.format(" %Y - %m           ").to_string(),
             header_day_of_week: String::from(" Su Mo Tu We Th Fr Sa"),
             calendar_weeks: Vec::with_capacity(8),
         };

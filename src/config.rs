@@ -8,6 +8,7 @@ pub struct Config {
     pub month_num: u32,
     pub calendar_month_column: u32,
     pub heuristic: bool,
+    pub month_border: String,
 }
 
 struct MY {
@@ -23,6 +24,7 @@ impl Config {
             month_num: 0,
             calendar_month_column: 0,
             heuristic: false,
+            month_border: " |".to_string()
         }
     }
 

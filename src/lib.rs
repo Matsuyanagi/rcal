@@ -29,6 +29,7 @@ mod tests {
             month_num: 1,
             calendar_month_column: 3,
             heuristic: false,
+            month_border: " |".to_string(),
         };
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
@@ -51,6 +52,7 @@ mod tests {
             month_num: 1,
             calendar_month_column: 3,
             heuristic: false,
+            month_border: " |".to_string(),
         };
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);

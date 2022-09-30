@@ -20,6 +20,10 @@
                 }
             },
             "args": [
+                "-n",
+                "10",
+                "-c",
+                "3"
             ],
             "cwd": "${workspaceFolder}"
         },
@@ -58,7 +62,12 @@
                     "kind": "bin"
                 }
             },
-            "args": [],
+            "args": [
+                "-m",
+                "10",
+                "-c",
+                "3"
+            ],
             "cwd": "${workspaceFolder}"
         },
         {
