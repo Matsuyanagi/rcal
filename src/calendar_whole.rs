@@ -12,12 +12,6 @@ impl CalendarWhole {
     pub fn exec(config: &config::Config) {
         let multi_monthes = Self::create_month_calendar_vector(&config);
 
-        /*         // テスト表示
-               for calendar in multi_monthes.iter() {
-                   println!("{}", calendar.temporal_to_string());
-               }
-               println!("----");
-        */
         let calendar_lines = Self::format_month_calendar(&config, &multi_monthes);
         for line in calendar_lines.iter() {
             println!("{}", line);
@@ -25,7 +19,9 @@ impl CalendarWhole {
     }
 
     // 必要なだけ複数の月のカレンダーを Vec で返す
-    fn create_month_calendar_vector(config: &config::Config) -> Vec<month_calendar::MonthCalendar> {
+    pub fn create_month_calendar_vector(
+        config: &config::Config,
+    ) -> Vec<month_calendar::MonthCalendar> {
         let (start_year, start_month, end_year, end_month) = Self::start_end_month(&config);
 
         let mut monthes = Vec::with_capacity(config.month_num as usize);
@@ -157,5 +153,44 @@ impl CalendarWhole {
         }
 
         calendar_lines
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn monthes_lines_count() {
+        let config = config::Config {
+            year: 2022,
+            month: 1,
+            month_num: 1,
+            calendar_month_column: 3,
+            heuristic: false,
+            month_border: "|".to_string(),
+        };
+
+        let multi_monthes =
+            crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config);
+
+        assert_eq!(multi_monthes.len() as u32, config.month_num);
+
+        // テスト表示
+        let mut lines = Vec::new();
+        for calendar in multi_monthes.iter() {
+            let str = calendar.temporal_to_string();
+            let str_collect = str.split('\n').collect::<Vec<&str>>();
+            let vec_lines = str_collect.iter().map(|s| s.to_string());
+            lines.extend(vec_lines);
+        }
+        println!("{:?}", lines);
+
+        assert_eq!(
+            lines.len(),
+            multi_monthes
+                .iter()
+                .fold(0, |num, month| num + month.calendar_weeks.len() + 2)
+        );
     }
 }
