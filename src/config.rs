@@ -24,7 +24,7 @@ impl Config {
             month_num: 0,
             calendar_month_column: 0,
             heuristic: false,
-            month_border: " |".to_string(),
+            month_border: "|".to_string(),
         }
     }
 

@@ -146,7 +146,7 @@ impl CalendarWhole {
 
         // 日付 : 月によって行数が変わる。unwrap_or("   ".repeat(7))
         let mut cal_line = Vec::with_capacity(monthes.len());
-        let empty_line = "   ".repeat(7);
+        let empty_line = "   ".repeat(7) + " ";
         for week_index in 0..max_row_count {
             cal_line.clear();
             for month in monthes {
