@@ -123,15 +123,11 @@ impl CalendarWhole {
         monthes: &[month_calendar::MonthCalendar],
     ) -> Vec<String> {
         let mut calendar_lines: Vec<String> = Vec::with_capacity(8);
-        let months_len = monthes.len();
 
-        // 月ごとのカレンダーの最大行数を求める。ヘッダ2行を含む
-        let mut max_row_count = 0;
-        for m in monthes.iter() {
-            if max_row_count < m.calendar_weeks.len() {
-                max_row_count = m.calendar_weeks.len();
-            }
-        }
+        // 月ごとのカレンダーの最大行数を求める。
+        let max_row_count = monthes.iter().fold(0usize, |max_length, month| {
+            std::cmp::max(max_length, month.calendar_weeks.len())
+        });
 
         // ヘッダ
         let mut line_arr = Vec::with_capacity(max_row_count + 2);
@@ -149,8 +145,7 @@ impl CalendarWhole {
         calendar_lines.push(line);
 
         // 日付 : 月によって行数が変わる。unwrap_or("   ".repeat(7))
-        // 全部の月が None (行がない) ならその行はくわえない
-        let mut cal_line = Vec::with_capacity(months_len);
+        let mut cal_line = Vec::with_capacity(monthes.len());
         let empty_line = "   ".repeat(7);
         for week_index in 0..max_row_count {
             cal_line.clear();
