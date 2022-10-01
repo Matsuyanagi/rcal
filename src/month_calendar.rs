@@ -54,32 +54,37 @@ impl MonthCalendar {
     fn create_day_table(&self) -> Vec<String> {
         let mut calendar_weeks = Vec::with_capacity(8);
         let day_space = "   ";
+        const WEEK_STR_LENGTH: usize = 3 * 7 + 1; // 1日あたりの文字数と月の境ための隙間 1文字分
 
         let minus_start_day = 1 - self.first_day_of_week;
-        let mut week_str: String = "".to_string();
+        let mut week_str: String = String::with_capacity(WEEK_STR_LENGTH);
+        week_str.push_str(" ");
 
         let mut day_count = 0;
         for d in minus_start_day..=self.last_day {
             if d <= 0 {
-                week_str += day_space;
+                week_str.push_str(day_space);
             } else {
                 if self.is_today_month && d == self.today_day {
-                    week_str += format!(">{:2}", d).as_str();
+                    week_str.pop(); // 前の日付の空白を1文字削る
+                    week_str.push_str(format!("[{:2}]", d).as_str());
                 } else {
-                    week_str += format!(" {:2}", d).as_str();
+                    week_str.push_str(format!("{:2} ", d).as_str());
                 }
             }
             day_count += 1;
             if day_count == 7 {
-                week_str += " ";
                 calendar_weeks.push(week_str);
-                week_str = "".to_string();
+                week_str = String::with_capacity(WEEK_STR_LENGTH);
+                week_str.push_str(" ");
                 day_count = 0;
             }
         }
-        if !week_str.is_empty() {
-            week_str += day_space.to_string().repeat(7 - day_count).as_str();
-            week_str += " ";
+        if week_str.len() > 1 {
+            // week_str.push_str( day_space.to_string().repeat(7 - day_count).as_str() );
+            for _ in 0..7 - day_count {
+                week_str.push_str(day_space);
+            }
             calendar_weeks.push(week_str);
         }
         calendar_weeks
