@@ -1,6 +1,5 @@
 use chrono::naive::NaiveDate;
-#[allow(unused_imports)]
-use chrono::{Datelike, Local, Months};
+use chrono::Datelike;
 use chrono_utilities::naive::DateTransitions;
 
 pub struct MonthCalendar {

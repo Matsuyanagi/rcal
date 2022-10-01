@@ -1,9 +1,3 @@
-#[allow(unused_imports)]
-use chrono::offset::Local;
-#[allow(unused_imports)]
-use chrono::prelude::*;
-#[allow(unused_imports)]
-use clap::{ArgEnum, Parser, Subcommand};
 pub mod calendar_whole;
 pub mod cli;
 pub mod config;
@@ -34,7 +28,7 @@ mod tests {
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 
-        let expect_answer = r#" 2022 - 01
+        let expect_answer = r#" 2022 - 01           
  Su Mo Tu We Th Fr Sa
                     1
   2  3  4  5  6  7  8
@@ -57,7 +51,7 @@ mod tests {
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 
-        let expect_answer = r#" 2015 - 02
+        let expect_answer = r#" 2015 - 02           
  Su Mo Tu We Th Fr Sa
   1  2  3  4  5  6  7
   8  9 10 11 12 13 14

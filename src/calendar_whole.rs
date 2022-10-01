@@ -1,6 +1,3 @@
-// use std::fmt::rt::v1::Count;
-
-use crate::month_calendar::MonthCalendar;
 use itertools;
 
 use super::config;
@@ -103,7 +100,7 @@ impl CalendarWhole {
             let mut monthes_strs = Self::conbine_month_to_strings(config, row_monthes);
 
             calendar_strs.append(&mut monthes_strs);
-            if month_end_index >= multi_monthes.len() as u32 -1 {
+            if month_end_index >= multi_monthes.len() as u32 - 1 {
                 break;
             }
             month_index += config.calendar_month_column;
