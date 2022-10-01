@@ -26,29 +26,7 @@ impl CalendarWhole {
 
     // 必要なだけ複数の月のカレンダーを Vec で返す
     fn create_month_calendar_vector(config: &config::Config) -> Vec<month_calendar::MonthCalendar> {
-        // カレンダー取り扱い開始月
-        let month_num_half: i32 = config.month_num as i32 / 2;
-
-        // カレンダー取り扱い終了月
-        let mut end_year: i32 = config.year as i32;
-        let mut end_month: i32 = config.month as i32 - 1; // end_month : 0-11
-        end_month += month_num_half;
-        while end_month > 11 {
-            end_year += 1;
-            end_month -= 12;
-        }
-        end_month += 1; // end_month : 1-12
-
-        let mut start_year: i32 = end_year;
-        let mut start_month: i32 = end_month - 1; // start_month : 0-11
-        if config.month_num > 1 {
-            start_month -= config.month_num as i32 - 1;
-            while start_month < 0 {
-                start_year -= 1;
-                start_month += 12;
-            }
-        }
-        start_month += 1; // start_month : 1-12
+        let (start_year, start_month, end_year, end_month) = Self::start_end_month(&config);
 
         let mut monthes = Vec::with_capacity(config.month_num as usize);
         let today = chrono::Local::now().date_naive();
@@ -74,6 +52,35 @@ impl CalendarWhole {
         }
 
         monthes
+    }
+
+    // 表示開始年月と終了年月を求める
+    fn start_end_month(config: &config::Config) -> (i32, i32, i32, i32) {
+        // カレンダー取り扱い開始月
+        let month_num_half: i32 = config.month_num as i32 / 2;
+
+        // カレンダー取り扱い終了月
+        let mut end_year: i32 = config.year as i32;
+        let mut end_month: i32 = config.month as i32 - 1; // end_month : 0-11
+        end_month += month_num_half;
+        while end_month > 11 {
+            end_year += 1;
+            end_month -= 12;
+        }
+        end_month += 1; // end_month : 1-12
+
+        let mut start_year: i32 = end_year;
+        let mut start_month: i32 = end_month - 1; // start_month : 0-11
+        if config.month_num > 1 {
+            start_month -= config.month_num as i32 - 1;
+            while start_month < 0 {
+                start_year -= 1;
+                start_month += 12;
+            }
+        }
+        start_month += 1; // start_month : 1-12
+
+        (start_year, start_month, end_year, end_month)
     }
 
     // multi_monthes の月カレンダーベクタを config に従って表示できる Vec<String> に変換する
@@ -103,6 +110,7 @@ impl CalendarWhole {
             if month_end_index >= multi_monthes.len() as u32 - 1 {
                 break;
             }
+            // 次行の開始インデックスへ進める
             month_index += config.calendar_month_column;
         }
 
