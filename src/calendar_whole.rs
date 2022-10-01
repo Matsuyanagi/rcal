@@ -22,8 +22,10 @@ impl CalendarWhole {
     pub fn create_month_calendar_vector(
         config: &config::Config,
     ) -> Vec<month_calendar::MonthCalendar> {
+        // 開始年月、終了年月を求める
         let (start_year, start_month, end_year, end_month) = Self::start_end_month(&config);
 
+        // 各月カレンダー配列
         let mut monthes = Vec::with_capacity(config.month_num as usize);
         let today = chrono::Local::now().date_naive();
 
@@ -31,8 +33,7 @@ impl CalendarWhole {
         let mut m = start_month;
         let mut y = start_year;
 
-        let mut cnt = 0;
-        while cnt < config.month_num {
+        for _ in 0 .. config.month_num {
             let calendar = month_calendar::MonthCalendar::new(y as u32, m as u32, today);
 
             monthes.push(calendar);
@@ -44,7 +45,6 @@ impl CalendarWhole {
                 y += 1;
                 m = 1;
             }
-            cnt += 1;
         }
 
         monthes
