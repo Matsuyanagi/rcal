@@ -33,7 +33,7 @@ impl CalendarWhole {
         let mut m = start_month;
         let mut y = start_year;
 
-        for _ in 0 .. config.month_num {
+        for _ in 0..config.month_num {
             let calendar = month_calendar::MonthCalendar::new(y as u32, m as u32, today);
 
             monthes.push(calendar);
@@ -158,19 +158,11 @@ impl CalendarWhole {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn monthes_lines_count() {
-        let config = config::Config {
-            year: 2022,
-            month: 1,
-            month_num: 1,
-            calendar_month_column: 3,
-            heuristic: false,
-            month_border: "|".to_string(),
-        };
-
+        let config = crate::config::Config::from_year_month_num(2022, 1, 3);
+        
         let multi_monthes =
             crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config);
 
