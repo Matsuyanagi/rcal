@@ -8,6 +8,7 @@ pub struct Config {
     pub month_num: u32,
     pub calendar_month_column: u32,
     pub heuristic: bool,
+    pub colorize: bool,
     pub month_border: String,
 }
 
@@ -23,6 +24,7 @@ impl Config {
             month: 0,
             month_num: 0,
             calendar_month_column: 1,
+            colorize: true,
             heuristic: false,
             month_border: "|".to_string(),
         }
@@ -34,6 +36,7 @@ impl Config {
             month,
             month_num,
             calendar_month_column: 1,
+            colorize: true,
             heuristic: false,
             month_border: "|".to_string(),
         }
@@ -42,6 +45,7 @@ impl Config {
     pub fn build(cli: &cli::Cli) -> Config {
         let mut config = Config::new();
         config.month_num = cli.month_num;
+        config.colorize = !cli.nocolorize;
         config.heuristic = cli.heuristic;
         config.calendar_month_column = cli.calendar_month_column;
 
@@ -106,5 +110,51 @@ impl Config {
                 second = m.second.unwrap_or_default()
             ),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn config_test_01() {
+        let cli = crate::cli::Cli {
+            first: Some(2020),
+            second: Some(1),
+            month_num: 10,
+            calendar_month_column: 2,
+            heuristic: false,
+            nocolorize: false,
+        };
+
+        let config = crate::config::Config::build(&cli);
+
+        assert_eq!(config.year, 2020);
+        assert_eq!(config.month, 1);
+        assert_eq!(config.month_num, 10);
+        assert_eq!(config.calendar_month_column, 2);
+        assert_eq!(config.heuristic, false);
+        assert_eq!(config.colorize, true);
+    }
+    
+    #[test]
+    fn config_test_02() {
+        let cli = crate::cli::Cli {
+            first: Some(2),
+            second: Some(2000),
+            month_num: 10,
+            calendar_month_column: 2,
+            heuristic: false,
+            nocolorize: true,
+        };
+
+        let config = crate::config::Config::build(&cli);
+
+        assert_eq!(config.year, 2000);
+        assert_eq!(config.month, 2);
+        assert_eq!(config.month_num, 10);
+        assert_eq!(config.calendar_month_column, 2);
+        assert_eq!(config.heuristic, false);
+        assert_eq!(config.colorize, false);
     }
 }
