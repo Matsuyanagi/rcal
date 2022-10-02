@@ -22,7 +22,18 @@ impl Config {
             year: 0,
             month: 0,
             month_num: 0,
-            calendar_month_column: 0,
+            calendar_month_column: 1,
+            heuristic: false,
+            month_border: "|".to_string(),
+        }
+    }
+
+    pub fn from_year_month_num(year: u32, month: u32, month_num: u32) -> Self {
+        Config {
+            year,
+            month,
+            month_num,
+            calendar_month_column: 1,
             heuristic: false,
             month_border: "|".to_string(),
         }

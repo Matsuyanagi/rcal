@@ -17,14 +17,7 @@ mod tests {
 
     #[test]
     fn test01() {
-        let config = crate::config::Config {
-            year: 2022,
-            month: 1,
-            month_num: 1,
-            calendar_month_column: 3,
-            heuristic: false,
-            month_border: "|".to_string(),
-        };
+        let config = crate::config::Config::from_year_month_num( 2022, 1, 1 );
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 
@@ -40,14 +33,8 @@ mod tests {
     }
     #[test]
     fn test02_leap_year() {
-        let config = crate::config::Config {
-            year: 2015,
-            month: 2,
-            month_num: 1,
-            calendar_month_column: 3,
-            heuristic: false,
-            month_border: "|".to_string(),
-        };
+        
+        let config = crate::config::Config::from_year_month_num( 2015, 2, 1 );
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 
