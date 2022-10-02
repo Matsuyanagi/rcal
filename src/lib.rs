@@ -6,8 +6,9 @@ pub mod month_calendar;
 pub mod main_lib {
     use crate::calendar_whole;
 
-    pub fn exec(config: &crate::config::Config) {
-        calendar_whole::CalendarWhole::exec(&config);
+    pub fn exec(config: &crate::config::Config) -> Vec<String> {
+        let lines = calendar_whole::CalendarWhole::exec(&config);
+        lines
     }
 }
 
@@ -17,7 +18,7 @@ mod tests {
 
     #[test]
     fn test01() {
-        let config = crate::config::Config::from_year_month_num( 2022, 1, 1 );
+        let config = crate::config::Config::from_year_month_num(2022, 1, 1);
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 
@@ -33,8 +34,7 @@ mod tests {
     }
     #[test]
     fn test02_leap_year() {
-        
-        let config = crate::config::Config::from_year_month_num( 2015, 2, 1 );
+        let config = crate::config::Config::from_year_month_num(2015, 2, 1);
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
 

@@ -136,7 +136,7 @@ mod tests {
         assert_eq!(config.heuristic, false);
         assert_eq!(config.colorize, true);
     }
-    
+
     #[test]
     fn config_test_02() {
         let cli = crate::cli::Cli {

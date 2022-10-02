@@ -9,13 +9,12 @@ impl CalendarWhole {
     pub fn new() -> Self {
         CalendarWhole {}
     }
-    pub fn exec(config: &config::Config) {
+    pub fn exec(config: &config::Config) -> Vec<String> {
         let multi_monthes = Self::create_month_calendar_vector(&config);
 
         let calendar_lines = Self::format_month_calendar(&config, &multi_monthes);
-        for line in calendar_lines.iter() {
-            println!("{}", line);
-        }
+
+        calendar_lines
     }
 
     // 必要なだけ複数の月のカレンダーを Vec で返す
@@ -162,7 +161,7 @@ mod tests {
     #[test]
     fn monthes_lines_count() {
         let config = crate::config::Config::from_year_month_num(2022, 1, 3);
-        
+
         let multi_monthes =
             crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config);
 
