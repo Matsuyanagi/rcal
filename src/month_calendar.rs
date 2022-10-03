@@ -1,6 +1,5 @@
 use super::config;
-use chrono::naive::NaiveDate;
-use chrono::Datelike;
+use chrono::{naive::NaiveDate, Datelike};
 use chrono_utilities::naive::DateTransitions;
 use colored::Colorize;
 
@@ -101,14 +100,13 @@ impl MonthCalendar {
                         today_pre_padding = " ".normal();
                     }
                 }
-                if config.colorize{
+                if config.colorize {
                     if self.is_today_month && d == self.today_day {
                         number_str = number_str.reverse();
                     }
                     today_pre_padding = today_pre_padding.yellow();
                     today_post_padding = today_post_padding.yellow();
                 }
-                
 
                 let day_str = format!("{}{}", today_pre_padding, number_str);
 
@@ -136,10 +134,77 @@ impl MonthCalendar {
     // デバグ用仮の表示用文字列出力
     pub fn temporal_to_string(&self) -> String {
         format!(
-            "{}\n{}\n{}",
+            "{}\n{}\n{}\n",
             self.header_year_month,
             self.header_day_of_week,
             self.calendar_weeks.join("\n")
         )
     }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use chrono;
+
+    #[test]
+    fn test_month_2022_12() {
+        let mut config = crate::config::Config::from_year_month_num(2022, 1, 3);
+        let mut today = chrono::NaiveDate::from_ymd(2022, 12, 31);
+        config.colorize = false;
+        let month = MonthCalendar::new(&config, 2022, 12, &today);
+        let expect_answer = r#" 2022 - 12            
+ Su Mo Tu We Th Fr Sa 
+              1  2  3 
+  4  5  6  7  8  9 10 
+ 11 12 13 14 15 16 17 
+ 18 19 20 21 22 23 24 
+ 25 26 27 28 29 30[31]
+"#;
+        assert_eq!(month.temporal_to_string(), expect_answer);
+        
+        today = chrono::NaiveDate::from_ymd(2022, 12, 3);
+        let month = MonthCalendar::new(&config, 2022, 12, &today);
+        let expect_answer = r#" 2022 - 12            
+ Su Mo Tu We Th Fr Sa 
+              1  2[ 3]
+  4  5  6  7  8  9 10 
+ 11 12 13 14 15 16 17 
+ 18 19 20 21 22 23 24 
+ 25 26 27 28 29 30 31 
+"#;
+        assert_eq!(month.temporal_to_string(), expect_answer);
+        
+        today = chrono::NaiveDate::from_ymd(2022, 12, 1);
+        let month = MonthCalendar::new(&config, 2022, 12, &today);
+        let expect_answer = r#" 2022 - 12            
+ Su Mo Tu We Th Fr Sa 
+            [ 1] 2  3 
+  4  5  6  7  8  9 10 
+ 11 12 13 14 15 16 17 
+ 18 19 20 21 22 23 24 
+ 25 26 27 28 29 30 31 
+"#;
+        assert_eq!(month.temporal_to_string(), expect_answer);
+        
+    }
+
+    
+    #[test]
+    fn test_month_2015_02_leapyear_02() {
+        let mut config = crate::config::Config::from_year_month_num(2015, 2, 1);
+        let today = chrono::NaiveDate::from_ymd(2015, 2, 1);
+        config.colorize = false;
+        let month = MonthCalendar::new(&config, 2015, 2, &today);
+        let expect_answer = r#" 2015 - 02            
+ Su Mo Tu We Th Fr Sa 
+[ 1] 2  3  4  5  6  7 
+  8  9 10 11 12 13 14 
+ 15 16 17 18 19 20 21 
+ 22 23 24 25 26 27 28 
+"#;
+        assert_eq!(month.temporal_to_string(), expect_answer);
+    }
+    
 }

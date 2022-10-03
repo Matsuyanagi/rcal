@@ -10,7 +10,8 @@ impl CalendarWhole {
         CalendarWhole {}
     }
     pub fn exec(config: &config::Config) -> Vec<String> {
-        let multi_monthes = Self::create_month_calendar_vector(&config);
+        let today = chrono::Local::now().date_naive();
+        let multi_monthes = Self::create_month_calendar_vector(&config, &today);
 
         let calendar_lines = Self::format_month_calendar(&config, &multi_monthes);
 
@@ -20,13 +21,13 @@ impl CalendarWhole {
     // 必要なだけ複数の月のカレンダーを Vec で返す
     pub fn create_month_calendar_vector(
         config: &config::Config,
+        today: &chrono::NaiveDate,
     ) -> Vec<month_calendar::MonthCalendar> {
         // 開始年月、終了年月を求める
         let (start_year, start_month, end_year, end_month) = Self::start_end_month(&config);
 
         // 各月カレンダー配列
         let mut monthes = Vec::with_capacity(config.month_num as usize);
-        let today = chrono::Local::now().date_naive();
 
         // 各月カレンダー作成
         let mut m = start_month;
@@ -162,15 +163,20 @@ mod tests {
     fn monthes_lines_count() {
         let config = crate::config::Config::from_year_month_num(2022, 1, 3);
 
+        let today = chrono::NaiveDate::from_ymd(2015, 2, 1);
         let multi_monthes =
-            crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config);
+            crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config, &today);
 
         assert_eq!(multi_monthes.len() as u32, config.month_num);
 
         // テスト表示
         let mut lines = Vec::new();
         for calendar in multi_monthes.iter() {
-            let str = calendar.temporal_to_string();
+            let mut str = calendar.temporal_to_string();
+            // 末尾が改行コードなら1文字削除。ruby の chomp 相当
+            if *(str.as_bytes().last().unwrap()) == b'\n' {
+                str.pop();
+            }
             let str_collect = str.split('\n').collect::<Vec<&str>>();
             let vec_lines = str_collect.iter().map(|s| s.to_string());
             lines.extend(vec_lines);
@@ -183,5 +189,29 @@ mod tests {
                 .iter()
                 .fold(0, |num, month| num + month.calendar_weeks.len() + 2)
         );
+    }
+
+    #[test]
+    fn test_month_2015_02_leapyear() {
+        let mut config = crate::config::Config::from_year_month_num(2015, 2, 3);
+        let today = chrono::NaiveDate::from_ymd(2015, 2, 1);
+        config.colorize = false;
+        config.calendar_month_column = 3;
+
+        let multi_monthes =
+            crate::calendar_whole::CalendarWhole::create_month_calendar_vector(&config, &today);
+
+        let calendar_lines =
+            crate::calendar_whole::CalendarWhole::format_month_calendar(&config, &multi_monthes);
+        let calendar_lines_str = calendar_lines.join("\n");
+
+        let expect_answer = r#" 2015 - 01            | 2015 - 02            | 2015 - 03            
+ Su Mo Tu We Th Fr Sa | Su Mo Tu We Th Fr Sa | Su Mo Tu We Th Fr Sa 
+              1  2  3 |[ 1] 2  3  4  5  6  7 |  1  2  3  4  5  6  7 
+  4  5  6  7  8  9 10 |  8  9 10 11 12 13 14 |  8  9 10 11 12 13 14 
+ 11 12 13 14 15 16 17 | 15 16 17 18 19 20 21 | 15 16 17 18 19 20 21 
+ 18 19 20 21 22 23 24 | 22 23 24 25 26 27 28 | 22 23 24 25 26 27 28 
+ 25 26 27 28 29 30 31 |                      | 29 30 31             "#;
+        assert_eq!(calendar_lines_str, expect_answer);
     }
 }
