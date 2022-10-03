@@ -9,4 +9,5 @@ edition = "2021"
 chrono = "^0.4"
 chrono-utilities = "^0.0.0-alpha1"
 clap = { version = "^3.2", features = ["derive"] }
+colored = "2.0.0"
 itertools = "0.10.5"

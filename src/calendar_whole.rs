@@ -33,7 +33,7 @@ impl CalendarWhole {
         let mut y = start_year;
 
         for _ in 0..config.month_num {
-            let calendar = month_calendar::MonthCalendar::new(y as u32, m as u32, today);
+            let calendar = month_calendar::MonthCalendar::new(&config, y as u32, m as u32, &today);
 
             monthes.push(calendar);
             if y == end_year && m == end_month {

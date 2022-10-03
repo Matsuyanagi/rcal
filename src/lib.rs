@@ -20,7 +20,8 @@ mod tests {
     fn test01() {
         let config = crate::config::Config::from_year_month_num(2022, 1, 1);
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
-        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
+        let calendar =
+            month_calendar::MonthCalendar::new(&config, config.year, config.month, &today_day);
 
         let expect_answer = r#" 2022 - 01            
  Su Mo Tu We Th Fr Sa 
@@ -36,7 +37,8 @@ mod tests {
     fn test02_leap_year() {
         let config = crate::config::Config::from_year_month_num(2015, 2, 1);
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
-        let calendar = month_calendar::MonthCalendar::new(config.year, config.month, today_day);
+        let calendar =
+            month_calendar::MonthCalendar::new(&config, config.year, config.month, &today_day);
 
         let expect_answer = r#" 2015 - 02            
  Su Mo Tu We Th Fr Sa 

@@ -28,6 +28,6 @@ pub struct Cli {
     #[clap(short, long, value_name = "HEAURISTIC", action = clap::ArgAction::SetTrue, next_line_help = true, long_help = "In January or December, the calendar for the previous year or the following year will be displayed.")]
     pub heuristic: bool,
     
-    #[clap(short = 'z', long = "nocolor", value_name = "NO COLORIZE", action = clap::ArgAction::SetFalse, next_line_help = true, long_help = "No colorize.")]
+    #[clap(short = 'z', long = "nocolor", value_name = "NO COLORIZE", action = clap::ArgAction::SetTrue, next_line_help = true, long_help = "No colorize.")]
     pub nocolorize: bool,
 }
