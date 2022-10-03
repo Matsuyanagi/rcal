@@ -7,7 +7,6 @@ pub struct Config {
 
     pub month_num: u32,
     pub calendar_month_column: u32,
-    pub heuristic: bool,
     pub colorize: bool,
     pub month_border: String,
 }
@@ -25,7 +24,6 @@ impl Config {
             month_num: 0,
             calendar_month_column: 1,
             colorize: true,
-            heuristic: false,
             month_border: "|".to_string(),
         }
     }
@@ -37,7 +35,6 @@ impl Config {
             month_num,
             calendar_month_column: 1,
             colorize: true,
-            heuristic: false,
             month_border: "|".to_string(),
         }
     }
@@ -46,7 +43,6 @@ impl Config {
         let mut config = Config::new();
         config.month_num = cli.month_num;
         config.colorize = !cli.nocolorize;
-        config.heuristic = cli.heuristic;
         config.calendar_month_column = cli.calendar_month_column;
 
         let m = MY {
@@ -123,7 +119,6 @@ mod tests {
             second: Some(1),
             month_num: 10,
             calendar_month_column: 2,
-            heuristic: false,
             nocolorize: false,
         };
 
@@ -133,7 +128,6 @@ mod tests {
         assert_eq!(config.month, 1);
         assert_eq!(config.month_num, 10);
         assert_eq!(config.calendar_month_column, 2);
-        assert_eq!(config.heuristic, false);
         assert_eq!(config.colorize, true);
     }
 
@@ -144,7 +138,6 @@ mod tests {
             second: Some(2000),
             month_num: 10,
             calendar_month_column: 2,
-            heuristic: false,
             nocolorize: true,
         };
 
@@ -154,7 +147,6 @@ mod tests {
         assert_eq!(config.month, 2);
         assert_eq!(config.month_num, 10);
         assert_eq!(config.calendar_month_column, 2);
-        assert_eq!(config.heuristic, false);
         assert_eq!(config.colorize, false);
     }
 }
