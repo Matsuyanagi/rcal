@@ -58,61 +58,66 @@ impl MonthCalendar {
     fn create_day_table(&self, config: &config::Config) -> Vec<String> {
         let mut calendar_weeks = Vec::with_capacity(8);
         let day_space = "   ";
-        const WEEK_STR_LENGTH: usize = 3 * 7 + 1; // 1日あたりの文字数と月の境ための隙間 1文字分
+        const WEEK_STR_LENGTH: usize = 100; // 1日あたりの文字数と月の境ための隙間 1文字分。エスケープシーケンス分も追加。
 
         let minus_start_day = 1 - self.first_day_of_week;
         let mut week_str = String::with_capacity(WEEK_STR_LENGTH);
-        week_str.push_str(" ");
 
-        let mut day_count = 0;
+        let mut day_of_week = 0; // 曜日
+        let mut today_pre_padding = " ".normal();
+        let mut today_post_padding = " ".normal();
+        let mut flag_need_today_post_padding = false;
         for d in minus_start_day..=self.last_day {
             if d <= 0 {
                 week_str.push_str(day_space);
             } else {
-                if self.is_today_month && d == self.today_day {
-                    week_str.pop(); // 前の日付の空白を1文字削る
-                    let day_str = format!("{:2}", d);
-                    if config.colorize {
-                        let day_str = match day_count {
-                            0 => day_str.bright_red(),
-                            6 => day_str.bright_blue(),
-                            _ => day_str.normal(),
-                        };
+                // 今日の日付数字
+                let number_str = format!("{:2}", d);
+                // 曜日によって色をつける
+                let mut number_str = match day_of_week {
+                    0 => number_str.bright_red(),  // 日曜
+                    6 => number_str.bright_blue(), // 土曜
+                    _ => number_str.normal(),      // 平日
+                };
 
-                        let number_str = day_str.reverse();
-                        let day_str = format!("{}{}{}", "[".yellow(), number_str, "]".yellow());
-                        // week_str.push_str(format!("[{:2}]", d).red().to_string().as_str());
-                        week_str.push_str(day_str.as_str());
-                    } else {
-                        week_str.push_str(day_str.as_str());
-                    }
+                if self.is_today_month && d == self.today_day {
+                    // 本日
+                    number_str = number_str.reverse();
+                    today_pre_padding = "[".yellow();
+                    today_post_padding = "]".yellow();
+                    flag_need_today_post_padding = true;
                 } else {
-                    let number_str = format!("{:2} ", d);
-                    let day_str = number_str;
-                    if config.colorize {
-                        // week_str.push_str(format!("{:2} ", d).blue().to_string().as_str());
-                        let day_str = match day_count {
-                            0 => day_str.bright_red(),
-                            6 => day_str.bright_blue(),
-                            _ => day_str.normal(),
-                        };
-                        week_str.push_str(day_str.to_string().as_str());
+                    // 本日以外
+                    if flag_need_today_post_padding {
+                        if day_of_week == 0 {
+                            today_pre_padding = " ".yellow();
+                            today_post_padding = " ".normal();
+                        } else {
+                            today_pre_padding = "]".yellow();
+                            today_post_padding = " ".normal();
+                        }
+                        flag_need_today_post_padding = false;
                     } else {
-                        week_str.push_str(day_str.as_str());
+                        today_pre_padding = " ".normal();
                     }
                 }
+
+                let day_str = format!("{}{}", today_pre_padding, number_str);
+
+                week_str.push_str(&day_str);
             }
-            day_count += 1;
-            if day_count == 7 {
+            day_of_week += 1;
+            if day_of_week == 7 {
+                week_str.push_str(&today_post_padding.to_string());
                 calendar_weeks.push(week_str);
+
                 week_str = String::with_capacity(WEEK_STR_LENGTH);
-                week_str.push_str(" ");
-                day_count = 0;
+                day_of_week = 0;
             }
         }
         if week_str.len() > 1 {
-            // week_str.push_str( day_space.to_string().repeat(7 - day_count).as_str() );
-            for _ in 0..7 - day_count {
+            week_str.push_str(today_post_padding.to_string().as_str());
+            for _ in 0..7 - day_of_week {
                 week_str.push_str(day_space);
             }
             calendar_weeks.push(week_str);
