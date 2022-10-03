@@ -36,7 +36,8 @@ mod tests {
     }
     #[test]
     fn test02_leap_year() {
-        let config = crate::config::Config::from_year_month_num(2015, 2, 1);
+        let mut config = crate::config::Config::from_year_month_num(2015, 2, 1);
+        config.colorize = false;
         let today_day = chrono::NaiveDate::from_ymd(2000, 1, 1);
         let calendar =
             month_calendar::MonthCalendar::new(&config, config.year, config.month, &today_day);

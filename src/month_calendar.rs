@@ -64,7 +64,7 @@ impl MonthCalendar {
         let mut week_str = String::with_capacity(WEEK_STR_LENGTH);
 
         let mut day_of_week = 0; // 曜日
-        let mut today_pre_padding = " ".normal();
+        let mut today_pre_padding: colored::ColoredString;
         let mut today_post_padding = " ".normal();
         let mut flag_need_today_post_padding = false;
         for d in minus_start_day..=self.last_day {
@@ -72,28 +72,28 @@ impl MonthCalendar {
                 week_str.push_str(day_space);
             } else {
                 // 今日の日付数字
-                let number_str = format!("{:2}", d);
-                // 曜日によって色をつける
-                let mut number_str = match day_of_week {
-                    0 => number_str.bright_red(),  // 日曜
-                    6 => number_str.bright_blue(), // 土曜
-                    _ => number_str.normal(),      // 平日
-                };
-
+                let mut number_str = format!("{:2}", d).normal();
+                if config.colorize {
+                    // 曜日によって色をつける
+                    number_str = match day_of_week {
+                        0 => number_str.bright_red(),  // 日曜
+                        6 => number_str.bright_blue(), // 土曜
+                        _ => number_str.normal(),      // 平日
+                    };
+                }
                 if self.is_today_month && d == self.today_day {
                     // 本日
-                    number_str = number_str.reverse();
-                    today_pre_padding = "[".yellow();
-                    today_post_padding = "]".yellow();
+                    today_pre_padding = "[".normal();
+                    today_post_padding = "]".normal();
                     flag_need_today_post_padding = true;
                 } else {
                     // 本日以外
                     if flag_need_today_post_padding {
                         if day_of_week == 0 {
-                            today_pre_padding = " ".yellow();
+                            today_pre_padding = " ".normal();
                             today_post_padding = " ".normal();
                         } else {
-                            today_pre_padding = "]".yellow();
+                            today_pre_padding = "]".normal();
                             today_post_padding = " ".normal();
                         }
                         flag_need_today_post_padding = false;
@@ -101,6 +101,14 @@ impl MonthCalendar {
                         today_pre_padding = " ".normal();
                     }
                 }
+                if config.colorize{
+                    if self.is_today_month && d == self.today_day {
+                        number_str = number_str.reverse();
+                    }
+                    today_pre_padding = today_pre_padding.yellow();
+                    today_post_padding = today_post_padding.yellow();
+                }
+                
 
                 let day_str = format!("{}{}", today_pre_padding, number_str);
 
