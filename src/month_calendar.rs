@@ -1,7 +1,9 @@
 use super::config;
-use chrono::{naive::NaiveDate, Datelike};
-use chrono_utilities::naive::DateTransitions;
-use colored::Colorize;
+use chrono::{Datelike, Months, naive::NaiveDate};
+use colored::{Color, Colorize};
+
+// Change this value to change the color of dates in the holiday file.
+const HOLIDAY_COLOR: Color = Color::BrightRed;
 
 pub struct MonthCalendar {
     pub year: u32,
@@ -24,8 +26,13 @@ pub struct MonthCalendar {
 
 impl MonthCalendar {
     pub fn new(config: &config::Config, year: u32, month: u32, today: &NaiveDate) -> Self {
-        let first_day = chrono::NaiveDate::from_ymd(year as i32, month, 1);
-        let last_day = first_day.end_of_month().unwrap().day() as i32;
+        let first_day = chrono::NaiveDate::from_ymd_opt(year as i32, month, 1).unwrap();
+        let last_day = first_day
+            .checked_add_months(Months::new(1))
+            .unwrap()
+            .pred_opt()
+            .unwrap()
+            .day() as i32;
 
         let mut first_day_of_week = first_day.weekday().number_from_monday() as i32;
         if first_day_of_week >= 7 {
@@ -74,10 +81,15 @@ impl MonthCalendar {
                 let mut number_str = format!("{:2}", d).normal();
                 if config.colorize {
                     // 曜日によって色をつける
-                    number_str = match day_of_week {
-                        0 => number_str.bright_red(),  // 日曜
-                        6 => number_str.bright_blue(), // 土曜
-                        _ => number_str.normal(),      // 平日
+                    let date = self.first_day.with_day(d as u32).unwrap();
+                    number_str = if config.holidays.contains(date) {
+                        number_str.color(HOLIDAY_COLOR)
+                    } else {
+                        match day_of_week {
+                            0 => number_str.bright_red(),  // 日曜
+                            6 => number_str.bright_blue(), // 土曜
+                            _ => number_str.normal(),      // 平日
+                        }
                     };
                 }
                 if self.is_today_month && d == self.today_day {
@@ -102,7 +114,7 @@ impl MonthCalendar {
                 }
                 if config.colorize {
                     if self.is_today_month && d == self.today_day {
-                        number_str = number_str.reverse();
+                        number_str = number_str.reversed();
                     }
                     today_pre_padding = today_pre_padding.yellow();
                     today_post_padding = today_post_padding.yellow();
@@ -163,7 +175,7 @@ mod tests {
  25 26 27 28 29 30[31]
 "#;
         assert_eq!(month.temporal_to_string(), expect_answer);
-        
+
         today = chrono::NaiveDate::from_ymd(2022, 12, 3);
         let month = MonthCalendar::new(&config, 2022, 12, &today);
         let expect_answer = r#" 2022 - 12            
@@ -175,7 +187,7 @@ mod tests {
  25 26 27 28 29 30 31 
 "#;
         assert_eq!(month.temporal_to_string(), expect_answer);
-        
+
         today = chrono::NaiveDate::from_ymd(2022, 12, 1);
         let month = MonthCalendar::new(&config, 2022, 12, &today);
         let expect_answer = r#" 2022 - 12            
@@ -187,10 +199,8 @@ mod tests {
  25 26 27 28 29 30 31 
 "#;
         assert_eq!(month.temporal_to_string(), expect_answer);
-        
     }
 
-    
     #[test]
     fn test_month_2015_02_leapyear_02() {
         let mut config = crate::config::Config::from_year_month_num(2015, 2, 1);
@@ -206,5 +216,4 @@ mod tests {
 "#;
         assert_eq!(month.temporal_to_string(), expect_answer);
     }
-    
 }

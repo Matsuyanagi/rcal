@@ -1,3 +1,3 @@
 pub fn setup() {
-    println!("-- setup()" );
+    println!("-- setup()");
 }

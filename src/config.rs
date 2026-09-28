@@ -1,4 +1,5 @@
 use crate::cli;
+use crate::holiday::HolidayCalendar;
 use chrono::prelude::*;
 
 pub struct Config {
@@ -9,6 +10,7 @@ pub struct Config {
     pub calendar_month_column: u32,
     pub colorize: bool,
     pub month_border: String,
+    pub holidays: HolidayCalendar,
 }
 
 struct MY {
@@ -25,6 +27,7 @@ impl Config {
             calendar_month_column: 1,
             colorize: true,
             month_border: "|".to_string(),
+            holidays: HolidayCalendar::default(),
         }
     }
 
@@ -36,6 +39,7 @@ impl Config {
             calendar_month_column: 1,
             colorize: true,
             month_border: "|".to_string(),
+            holidays: HolidayCalendar::default(),
         }
     }
 
@@ -120,6 +124,7 @@ mod tests {
             month_num: 10,
             calendar_month_column: 2,
             nocolorize: false,
+            holiday_file: None,
         };
 
         let config = crate::config::Config::build(&cli);
@@ -139,6 +144,7 @@ mod tests {
             month_num: 10,
             calendar_month_column: 2,
             nocolorize: true,
+            holiday_file: None,
         };
 
         let config = crate::config::Config::build(&cli);

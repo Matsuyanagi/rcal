@@ -1,6 +1,7 @@
 pub mod calendar_whole;
 pub mod cli;
 pub mod config;
+pub mod holiday;
 pub mod month_calendar;
 
 pub mod main_lib {
